@@ -1,10 +1,10 @@
-﻿using Entities.Abstract;
+﻿using Coree.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Text;
 
-namespace DataAccess.Abstract
+namespace Coree.DataAccess
 {
     //class:eferans tip
     //Ientity:IEntity olabilir veya IEntity implemente eden bir nesne 
