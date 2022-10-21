@@ -17,4 +17,7 @@ namespace Coree.Extensions
             return claimsPrincipal?.Claims(ClaimTypes.Role);
         }
     }
+
+
+
 }

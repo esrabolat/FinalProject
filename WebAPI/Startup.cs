@@ -1,5 +1,8 @@
 using Business.Abstract;
 using Business.Concrete;
+using Coree.DependenyResolvers;
+using Coree.Extensions;
+using Coree.Utilities.IoC;
 using Coree.Utilities.Security.Encryption;
 using Coree.Utilities.Security.JWT;
 using DataAccess.Abstract;
@@ -52,6 +55,10 @@ namespace WebAPI
                         IssuerSigningKey = SecurityKeyHelper.CreateSecurityKey(tokenOptions.SecurityKey)
                     };
                 });
+
+            services.AddDependencyResolvers(new ICoreModule[] { 
+               new CoreModule()
+            });
         }
 
 

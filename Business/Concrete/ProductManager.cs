@@ -1,6 +1,9 @@
 ﻿using Business.Abstract;
 using Business.Constants;
 using Business.ValidationRules.FluentValidation;
+using Coree.Aspects.Autofac.Caching;
+using Coree.Aspects.Autofac.Performance;
+using Coree.Aspects.Autofac.TransactionScopeAspect;
 using Coree.Aspects.Autofac.Validation;
 using Coree.CrossCuttingConcerns.Validation;
 using Coree.Utilities.Business;
@@ -27,7 +30,9 @@ namespace Business.Concrete
             _categoryService = categoryService;
         }
 
+        //[SecuredOperation("product.add,admin")]
         [ValidationAspect(typeof(ProductValidator))]
+        [CacheRemoveAspect("IProductService.Get")]
         public IResult Add(Product product)
         {
             IResult result = BusinessRules.Run(CheckIfProductNameExists(product.ProductName),
@@ -66,10 +71,10 @@ namespace Business.Concrete
             throw new NotImplementedException();
         }
 
-        public List<ProductDetailDto> GetProductDetailDtos()
-        {
-            return _productDal.GetProductDetailDtos();
-        }
+        //public IDataResult <List<ProductDetailDto>> GetProductDetails()
+        //{
+        //    return new SuccessDataResult<List<ProductDetailDto>> (_productDal.GetProductDetails());
+        //}
 
         public IResult Update(Product product)
         {
@@ -78,7 +83,7 @@ namespace Business.Concrete
         }
 
         
-        //[PerformanceAspect(5)]
+        [PerformanceAspect(5)]
         public IDataResult<Product> GetById(int productId)
         {
             return new SuccessDataResult<Product>(_productDal.Get(p => p.ProductId == productId));
@@ -120,6 +125,20 @@ namespace Business.Concrete
             }
 
             return new SuccessResult();
+        }
+        [TransactionScopeAspect]
+        public IResult AddTransactionalTest(Product product)
+        {
+
+            Add(product);
+            if (product.UnitPrice < 10)
+            {
+                throw new Exception("");
+            }
+
+            Add(product);
+
+            return null;
         }
 
 
